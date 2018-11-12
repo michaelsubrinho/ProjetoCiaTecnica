@@ -1,0 +1,133 @@
+﻿@model ProjetoCiaTecnica.Models.Cliente
+@{
+    ViewBag.Title = "Cadastrar-se";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(function () {
+        $("#opcao-pessoa").change(function () {
+            var opcao = $("#opcao-pessoa").val();
+            mostrarCampos(opcao);
+        });
+
+        $('.cpf').mask('000.000.000-00', { reverse: true });
+        $('.cnpj').mask('00.000.000/0000-00', { reverse: true });
+
+        @if(Model.PessoaFisica != null)
+        {
+            @: $("#opcao-pessoa").val(1);
+            @: mostrarCampos(1);
+        }
+        else if (Model.PessoaJuridica != null)
+        {
+            @: $("#opcao-pessoa").val(2);
+            @: mostrarCampos(2);
+        }
+        else
+        {
+            @: $("#opcao-pessoa").val(0);
+            @: mostrarCampos(0);
+        }
+    })
+
+    function mostrarCampos(opcao) {
+        if (opcao == 1) {
+            $("#juridica input").prop('disabled', true);
+            $("#juridica").css({ "display": "none" });
+            $("#fisica").css({ "display": "block" });
+            $("#fisica input").prop('disabled', false);
+        }
+        else if (opcao == 2) {
+            $("#fisica input").prop('disabled', true);
+            $("#fisica").css({ "display": "none" });
+            $("#juridica").css({ "display": "block" });
+            $("#juridica input").prop('disabled', false);
+        }
+        else {
+            $("#fisica input").prop('disabled', false);
+            $("#juridica input").prop('disabled', false);
+            $("#fisica").css({ "display": "none" });
+            $("#juridica").css({ "display": "none" });
+        }
+    }
+</script>
+<h2>Cadastre-se</h2>
+<hr />
+<div id="form-pessoa">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("CadastrarPessoa", "Home", FormMethod.Post))
+            {
+                @Html.ValidationMessage("erro-cadastrar", new { @class = "text-danger" })
+                <br />
+                @Html.LabelFor(m => m.Logradouro)
+                @Html.TextBoxFor(m => m.Logradouro)
+                @Html.ValidationMessageFor(m => m.Logradouro, "", new { @class = "text-danger" })
+                <br />
+                @Html.LabelFor(m => m.Numero)
+                @Html.TextBoxFor(m => m.Numero)
+                @Html.ValidationMessageFor(m => m.Numero, "", new { @class = "text-danger" })
+                <br />
+                @Html.LabelFor(m => m.Bairro)
+                @Html.TextBoxFor(m => m.Bairro)
+                @Html.ValidationMessageFor(m => m.Bairro, "", new { @class = "text-danger" })
+                <br />
+                @Html.LabelFor(m => m.Cep)
+                @Html.TextBoxFor(m => m.Cep)
+                @Html.ValidationMessageFor(m => m.Cep, "", new { @class = "text-danger" })
+                <br />
+                @Html.LabelFor(m => m.Cidade)
+                @Html.TextBoxFor(m => m.Cidade)
+                @Html.ValidationMessageFor(m => m.Cidade, "", new { @class = "text-danger" })
+                <br />
+                @Html.LabelFor(m => m.Complemento)
+                @Html.TextBoxFor(m => m.Complemento)
+                <br />
+                @Html.LabelFor(m => m.Uf)
+                @Html.TextBoxFor(m => m.Uf)
+                @Html.ValidationMessageFor(m => m.Uf, "", new { @class = "text-danger" })
+                <br />
+                <label for="opcao-pessoa">Tipo de cadastro</label>
+                <select id="opcao-pessoa" class="form-control">
+                    <option value="0" selected>Selecione...</option>
+                    <option value="1">Pessoa Fisica</option>
+                    <option value="2">Pessoa Juridica</option>
+                </select>
+                <br />
+                <div id="fisica" style="display:none">
+                    @Html.LabelFor(m => m.PessoaFisica.Cpf)
+                    @Html.TextBoxFor(m => m.PessoaFisica.Cpf, new { @class = "cpf" })
+                    @Html.ValidationMessageFor(m => m.PessoaFisica.Cpf, "", new { @class = "text-danger" })
+                    <br />
+                    @Html.LabelFor(m => m.PessoaFisica.Nome)
+                    @Html.TextBoxFor(m => m.PessoaFisica.Nome)
+                    @Html.ValidationMessageFor(m => m.PessoaFisica.Nome, "", new { @class = "text-danger" })
+                    <br />
+                    @Html.LabelFor(m => m.PessoaFisica.Sobrenome)
+                    @Html.TextBoxFor(m => m.PessoaFisica.Sobrenome)
+                    @Html.ValidationMessageFor(m => m.PessoaFisica.Sobrenome, "", new { @class = "text-danger" })
+                    <br />
+                    @Html.LabelFor(m => m.PessoaFisica.DataNascimento)
+                    @Html.EditorFor(m => m.PessoaFisica.DataNascimento)
+                    @Html.ValidationMessageFor(m => m.PessoaFisica.DataNascimento, "", new { @class = "text-danger" })
+                    @Html.ValidationMessage("idade-invalida", "", new { @class = "text-danger" })
+                </div>
+                <div id="juridica" style="display:none">
+                    @Html.LabelFor(m => m.PessoaJuridica.Cnpj)
+                    @Html.TextBoxFor(m => m.PessoaJuridica.Cnpj, new { @class = "cnpj" })
+                    @Html.ValidationMessageFor(m => m.PessoaJuridica.Cnpj, "", new { @class = "text-danger" })
+                    <br />
+                    @Html.LabelFor(m => m.PessoaJuridica.RazaoSocial)
+                    @Html.TextBoxFor(m => m.PessoaJuridica.RazaoSocial)
+                    @Html.ValidationMessageFor(m => m.PessoaJuridica.RazaoSocial, "", new { @class = "text-danger" })
+                    <br />
+                    @Html.LabelFor(m => m.PessoaJuridica.NomeFantasia)
+                    @Html.TextBoxFor(m => m.PessoaJuridica.NomeFantasia)
+                    @Html.ValidationMessageFor(m => m.PessoaJuridica.NomeFantasia, "", new { @class = "text-danger" })
+                </div>
+                <br />
+                <input type="submit" value="Cadastrar" />
+            }
+        </div>
+    </div>
+</div>
